@@ -1,15 +1,9 @@
-import {Store, useStore} from "@tanstack/solid-store";
-import parseDate from "@/shared/utils/date/parce-date";
-import getLastDateOfCurrentMonth from "@/shared/utils/date/get-last-date";
+import {useStore} from "@tanstack/solid-store";
+import {dateStore} from "./create-store.ts";
 
-const dateStore = new Store({
-    startDate: parseDate(new Date()),
-    endDate: getLastDateOfCurrentMonth(new Date()),
-})
 
-const useDateStore = useStore(dateStore)
+const createDateStore = useStore(dateStore)
 
 export {
-    dateStore,
-    useDateStore
+    createDateStore
 }

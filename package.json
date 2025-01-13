@@ -13,9 +13,11 @@
     "@tanstack/solid-form": "^0.41.0",
     "@tanstack/solid-store": "^0.7.0",
     "dayjs": "^1.11.13",
+    "lodash": "^4.17.21",
     "solid-js": "^1.9.3"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.14",
     "@types/node": "^22.10.3",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",

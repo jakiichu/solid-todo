@@ -1,90 +1,32 @@
 import {IPropsWithChildren} from "@/shared/interface/common";
-import {createForm} from "@tanstack/solid-form";
-import FieldInfo from "@/shared/field/field-info";
-import {useDateStore} from "@/shared/lib/store/date";
-import parseDate from "@/shared/utils/date/parce-date";
+import {createForm, DeepKeys} from "@tanstack/solid-form";
+import {createDateStore} from "@/shared/lib/store/date";
+import HeaderInput from "@/features/header-date-form/lnput";
+import {IDateFormPort} from "@/shared/interface/entries/date/port";
+import formArray from "@/widget/layout/header/const.ts";
+import {JSXElement} from "solid-js";
+import {IFieldDateForm} from "@/shared/interface/entries/date/form";
 
 
-const HeaderLayout = ({children}:IPropsWithChildren) => {
-    const props = useDateStore()
-
-    const form = createForm(() => ({
-        defaultValues: {
-            startDate: parseDate(props.startDate), endDate: parseDate(props.endDate)
-        },
-        onSubmit: async ({ value }) => {
-            console.log(value)
-        },
+const HeaderLayout = ({children}: IPropsWithChildren): JSXElement => {
+    const {defaultValues} = createDateStore()
+    const form = createForm<IDateFormPort>(() => ({
+        defaultValues,
     }))
-    console.log(parseDate(props.startDate))
+
     return (
-        <div>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    form.handleSubmit()
-                }}
-            >
-                <div>
-                    {/* A type-safe field component*/}
+        <div class='m-4 flex flex-col gap-4'>
+            <form class='flex'>
+                {Object.entries(formArray).map(([key, value]) => (
                     <form.Field
-                        name="startDate"
-                        children={(field) => {
-                            return (
-                                <>
-                                    <label for={field().name}>Начальная дата:</label>
-                                    <input
-                                        id={field().name}
-                                        name={field().name}
-                                        value={field().state.value}
-                                        onBlur={field().handleBlur}
-                                        type='date'
-                                        onInput={(e) => {
-                                            console.log(e.target.value)
-                                            return field().handleChange(parseDate(e.target.value))
-                                        }}
-                                    />
-                                    <FieldInfo field={field()}/>
-                                </>
-                            )
-                        }}
-                    />
-                </div>
-                <div>
-                    <form.Field
-                        name="endDate"
-                        children={(field) => {
-                            return (
-                                <>
-                                    <label for={field().name}>Конечная дата:</label>
-                                    <input
-                                        id={field().name}
-                                        name={field().name}
-                                        value={field().state.value}
-                                        onBlur={field().handleBlur}
-                                        type='date'
-                                        onInput={(e) => field().handleChange(parseDate(e.target.value))}
-                                    />
-                                    <FieldInfo field={field()}/>
-                                </>
-                            )
-                        }}
-                    />
-                </div>
-                <form.Subscribe
-                    selector={(state) => ({
-                        canSubmit: state.canSubmit,
-                        isSubmitting: state.isSubmitting,
-                    })}
-                    children={(state) => {
-                        return (
-                            <button type="submit" disabled={!state().canSubmit}>
-                                {state().isSubmitting ? '...' : 'Submit'}
-                            </button>
+                        name={key as DeepKeys<IDateFormPort>}
+                        children={(field) => (
+                            <HeaderInput text={value}
+                                         field={field as IFieldDateForm}/>
                         )
-                    }}
-                />
+                        }
+                    />
+                ))}
             </form>
             {children}
         </div>
